@@ -170,7 +170,7 @@ namespace ServerEngine
                             }
                         }
 
-                        Debug.WriteLine("Received: {0}/{1} ( {2}% )", currentBytesRecieved.Count, currentBytesNeeded, ((float)currentBytesRecieved.Count / (float)currentBytesNeeded) * 100);
+                        Debug.WriteLine("Received: {0}/{1} ( {2} % )", currentBytesRecieved.Count, currentBytesNeeded, ((float)currentBytesRecieved.Count / (float)currentBytesNeeded) * 100);
 
                         if (currentBytesRecieved.Count >= currentBytesNeeded)
                         {

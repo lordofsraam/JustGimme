@@ -63,6 +63,11 @@ namespace JustGimme
         }
 
         private long bytesStreamed;
+        public long BytesSent
+        {
+            get { return bytesStreamed; }
+        }
+
         private long bytesTotal;
         public bool NeedToStream
         {
