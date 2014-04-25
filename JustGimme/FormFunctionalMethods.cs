@@ -51,7 +51,7 @@ namespace JustGimme
 
                     string strData = Encoding.ASCII.GetString(formatted.ToArray()).Trim();
                     if (string.IsNullOrWhiteSpace(strData)) continue;
-                    List<string> toks = strData.Split(' ').ToList<string>();
+                    List<string> toks = strData.Split(' ').ToList();
                     string protocol = toks[0];
 
                     if (Numerics.ContainsKey(protocol))
@@ -77,7 +77,7 @@ namespace JustGimme
             if (Connected && !string.IsNullOrWhiteSpace(msg))
             {
                 byte[] data = Encoding.ASCII.GetBytes(msg);
-                Array.Resize<byte>(ref data, sck.SendBufferSize);
+                Array.Resize(ref data, sck.SendBufferSize);
                 sck.Send(data);
             }
         }
@@ -88,7 +88,7 @@ namespace JustGimme
             {
                 if (filedata.Length <= sck.SendBufferSize)
                 {
-                    Array.Resize<byte>(ref filedata, sck.SendBufferSize);
+                    Array.Resize(ref filedata, sck.SendBufferSize);
                     sck.Send(filedata);
                 }
                 else
@@ -105,12 +105,12 @@ namespace JustGimme
                 while (h.NeedToStream)
                 {
                     byte[] buff = h.StreamBytes();
-                    Array.Resize<byte>(ref buff, sck.SendBufferSize);
+                    Array.Resize(ref buff, sck.SendBufferSize);
                     sck.Send(buff);
                     Debug.WriteLine("Sent: {0}/{1} ( {2} % )", h.BytesSent, h.Information.Length,
                         ((float) h.BytesSent/(float) h.Information.Length)*100);
-                    JustGimme.Program.pMain.SetStatusText("Sent " +
-                                                          ((float) h.BytesSent/(float) h.Information.Length)*100 +
+                    Program.pMain.SetStatusText("Sent " +
+                                                          ((float) h.BytesSent/ (float)h.Information.Length)*100 +
                                                           " % of file " + h.ShortName);
                 }
             }

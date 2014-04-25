@@ -70,8 +70,8 @@ namespace JustGimme
             recieverThread.Start();
             bSend.Enabled = false;
 
-            orgWidth = this.Width;
-            orgHeight = this.Height;
+            orgWidth = Width;
+            orgHeight = Height;
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace JustGimme
         private void lvQueue_DragDrop(object sender, DragEventArgs e)
         {
             soft_queue.InsertRange(0, (string[])(e.Data.GetData(DataFormats.FileDrop)));
-            soft_queue = soft_queue.Distinct<string>().ToList<string>();
+            soft_queue = soft_queue.Distinct().ToList<string>();
             foreach (string s in soft_queue)
             {
                 if (!queue_names.Contains(s.Split('\\')[s.Split('\\').Count() - 1]))
@@ -150,8 +150,8 @@ namespace JustGimme
                 if (!imageList1.Images.ContainsKey(h.Information.Extension))
                 {
                     // If not, add the image to the image list.
-                    iconForFile = System.Drawing.Icon.ExtractAssociatedIcon(h.Information.FullName);
-                    imageList1.Images.Add(h.Information.Extension, iconForFile);
+                    iconForFile = Icon.ExtractAssociatedIcon(h.Information.FullName);
+                    if (iconForFile != null) imageList1.Images.Add(h.Information.Extension, iconForFile);
                 }
                 item.ImageKey = h.Information.Extension;
                 lvQueue.Items.Add(item);

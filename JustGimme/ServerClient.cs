@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Diagnostics;
 using System.IO;
+using JustGimme;
 
 namespace ServerEngine
 {
@@ -61,7 +62,7 @@ namespace ServerEngine
         /// </summary>
         public void Run()
         {
-            t = new Thread(new ThreadStart(this.Listener));
+            t = new Thread(new ThreadStart(Listener));
             t.IsBackground = true;
             t.Start();
         }
@@ -74,7 +75,7 @@ namespace ServerEngine
         {
             //Debug.WriteLine("Sending '" + msg + "'"+" to "+this.IPAddress);
             byte[] data = Encoding.ASCII.GetBytes(msg);
-            Array.Resize<byte>(ref data, s.SendBufferSize);
+            Array.Resize(ref data, s.SendBufferSize);
             s.Send(data);
         }
 
@@ -87,10 +88,10 @@ namespace ServerEngine
         {
             s.Close();
             Debug.WriteLine("Socket to " + IPAddress + " has been closed. Calling OnSocketClose()");
-            this.OnSocketClose();
+            OnSocketClose();
             Debug.WriteLine("Cleaning client from server...");
             Host.RemoveClient(this);
-            JustGimme.Program.pMain.SetStatusText("Sender dropped.");
+            Program.pMain.SetStatusText("Sender dropped.");
         }
 
         /// <summary>
@@ -99,7 +100,7 @@ namespace ServerEngine
         /// </summary>
         public void Listener()
         {
-            Debug.WriteLine("Listener for " + this.IPAddress + " has been started.");
+            Debug.WriteLine("Listener for " + IPAddress + " has been started.");
             try
             {
                 while (true)
@@ -117,14 +118,14 @@ namespace ServerEngine
                     catch (SocketException)
                     {
                         Debug.WriteLine("Error on Receive(). Client probably disconnected. Will now Close().");
-                        this.Close();
+                        Close();
                         break;
                     }
 
                     if (bytesRead == 0)
                     {
                         Debug.WriteLine("0 bytes read from client " + IPAddress + ". Closing client socket...");
-                        this.Close();
+                        Close();
                         break;
                     }
 
@@ -143,9 +144,9 @@ namespace ServerEngine
 
                         if (string.IsNullOrWhiteSpace(strData)) continue;
 
-                        Debug.WriteLine(this.IPAddress + ": " + strData);
+                        Debug.WriteLine(IPAddress + ": " + strData);
 
-                        List<string> tokens = strData.Split(' ').ToList<string>();
+                        List<string> tokens = strData.Split(' ').ToList();
 
                         Debug.WriteLine(tokens[0].ToLower());
                         //If we have a function made to handle this, send it the message in tokens.
@@ -157,9 +158,9 @@ namespace ServerEngine
                     else if(mode == 1)
                     {
                         Debug.WriteLine("Receiving file(s).");
-                        JustGimme.Program.pMain.SetStatusText("Receiving file(s).");
+                        Program.pMain.SetStatusText("Receiving file(s).");
 
-                        currentBytesNeeded = JustGimme.Program.pMain.soft_recieve_queue[JustGimme.Program.pMain.recieve_queue_names[currentPlaceInQueue]];
+                        currentBytesNeeded = Program.pMain.soft_recieve_queue[Program.pMain.recieve_queue_names[currentPlaceInQueue]];
                         
                         List<byte> formatted = new List<byte>(bytesRead);
                         if (currentBytesRecieved.Count < currentBytesNeeded)
@@ -173,15 +174,15 @@ namespace ServerEngine
                         Debug.WriteLine("Received: {0}/{1} ( {2} % )", currentBytesRecieved.Count, currentBytesNeeded,
                             ((float) currentBytesRecieved.Count/(float) currentBytesNeeded)*100);
 
-                        JustGimme.Program.pMain.SetStatusText("Received " +
+                        Program.pMain.SetStatusText("Received " +
                                                               ((float) currentBytesRecieved.Count/
                                                                (float) currentBytesNeeded)*100 + " % of file " +
-                                                              JustGimme.Program.pMain.recieve_queue_names[
+                                                              Program.pMain.recieve_queue_names[
                                                                   currentPlaceInQueue]);
 
                         if (currentBytesRecieved.Count >= currentBytesNeeded)
                         {
-                            File.WriteAllBytes(JustGimme.Program.pMain.recieve_queue_names[currentPlaceInQueue],
+                            File.WriteAllBytes(Program.pMain.recieve_queue_names[currentPlaceInQueue],
                                 currentBytesRecieved.ToArray());
                             Debug.WriteLine("currentBytesRecieved.Count: " + currentBytesRecieved.Count);
                             if (currentBytesRecieved.Count == currentBytesNeeded)
@@ -194,15 +195,15 @@ namespace ServerEngine
                             }
                             currentBytesNeeded = 0;
                             currentBytesRecieved = new List<byte>();
-                            Debug.WriteLine("pMain.recieve_queue_names.Count: " + JustGimme.Program.pMain.recieve_queue_names.Count);
+                            Debug.WriteLine("pMain.recieve_queue_names.Count: " + Program.pMain.recieve_queue_names.Count);
                             Debug.WriteLine("currentPlaceInQueue: " + currentPlaceInQueue);
-                            if (JustGimme.Program.pMain.recieve_queue_names.Count > currentPlaceInQueue)
+                            if (Program.pMain.recieve_queue_names.Count > currentPlaceInQueue)
                             {
                                 currentPlaceInQueue++;
-                                if (JustGimme.Program.pMain.recieve_queue_names.Count == currentPlaceInQueue)
+                                if (Program.pMain.recieve_queue_names.Count == currentPlaceInQueue)
                                 {
                                     Debug.WriteLine("All files recieved.");
-                                    this.OnRecieveDone();
+                                    OnRecieveDone();
                                 }
                                 else
                                 {
@@ -224,11 +225,11 @@ namespace ServerEngine
                 Debug.WriteLine(error.ToString());
                 if (error.ErrorCode == 10054)
                 {
-                    JustGimme.Program.pMain.SetStatusText("Sender dropped.");
+                    Program.pMain.SetStatusText("Sender dropped.");
                 }
                 else
                 {
-                    JustGimme.Program.pMain.SetStatusText(error.Message);
+                    Program.pMain.SetStatusText(error.Message);
                 }
             }
         } //listener end
@@ -238,7 +239,7 @@ namespace ServerEngine
         /// </summary>
         private void OnRecieveDone()
         {
-            JustGimme.Program.pMain.SetStatusText("Done.");
+            Program.pMain.SetStatusText("Done.");
         } 
     } //class end
 } //ns end

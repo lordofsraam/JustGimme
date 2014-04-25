@@ -15,7 +15,7 @@ namespace ServerEngine
         {
             if (message.Count >= 3)
             {
-                JustGimme.Program.pMain.SetStatusText("Waiting for " + (message.Count-1)/2 + " file(s).");
+                Program.pMain.SetStatusText("Waiting for " + (message.Count-1)/2 + " file(s).");
                 Debug.WriteLine("Waiting for file(s):");
                 //Find out how many files we're going to get and how big each one is.
                 for (int i = 1; i < message.Count; i += 2)
@@ -30,7 +30,7 @@ namespace ServerEngine
             }
             else
             {
-                JustGimme.Program.pMain.SetStatusText("Weird information format recieved.");
+                Program.pMain.SetStatusText("Weird information format recieved.");
             }
         }
     }

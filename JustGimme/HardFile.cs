@@ -14,16 +14,13 @@ namespace JustGimme
         private List<byte> bytes;
         public List<byte> Bytes
         {
-            get 
+            get
             {
                 if (bytes != null)
                 {
                     return bytes;
                 }
-                else
-                {
-                    return new List<byte>(File.ReadAllBytes(filePath));
-                }
+                return new List<byte>(File.ReadAllBytes(filePath));
             }
         }
 
@@ -98,17 +95,14 @@ namespace JustGimme
 
         public byte[] StreamBytes()
         {
-            if (this.exists)
+            if (exists)
             {
                 byte[] buff = new byte[8192];
                 stream.Read(buff, 0, 8192);
                 bytesStreamed += 8192;
                 return buff;
             }
-            else
-            {
-                return null;
-            }
+            return null;
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Diagnostics;
+using JustGimme;
 
 namespace ServerEngine
 {
@@ -52,13 +53,13 @@ namespace ServerEngine
                         Debug.WriteLine("Connection to " + Clients[Clients.Count - 1].IPAddress + " made. Now starting client thread...");
                         Clients[Clients.Count - 1].Run();
                         Debug.WriteLine("Client thread started.");
-                        JustGimme.Program.pMain.SetStatusText("Outside connection accepted.");
+                        Program.pMain.SetStatusText("Outside connection accepted.");
                     }
                     else
                     {
                         if (!stat_set)
                         {
-                            JustGimme.Program.pMain.SetStatusText("No longer accepting outside connections.");
+                            Program.pMain.SetStatusText("No longer accepting outside connections.");
                             stat_set = true;
                         }
                     }
