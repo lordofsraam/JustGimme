@@ -25,6 +25,7 @@ namespace JustGimme
             get { return reciever;  }
         }
         Thread recieverThread;
+        Thread senderThread;
         private int maxByteSendSize = 8192;
 
         byte[] localBuffer { get; set; }
@@ -198,10 +199,15 @@ namespace JustGimme
             }
             SendToServer(fileByteInfo.Trim());
 
+            senderThread = new Thread(SendAllFiles) {IsBackground = true};
+            senderThread.Start();
+        }
+
+        private void SendAllFiles()
+        {
             foreach (HardFile h in hard_queue)
             {
                 SendToServer(h);
-                lvQueue.Items.RemoveByKey(h.Information.Name);
             }
         }
 
