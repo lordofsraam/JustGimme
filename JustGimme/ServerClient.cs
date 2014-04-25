@@ -156,11 +156,11 @@ namespace ServerEngine
                     }
                     else if(mode == 1)
                     {
-                        //Debug.WriteLine("Receiving file(s).");
+                        Debug.WriteLine("Receiving file(s).");
                         JustGimme.Program.pMain.SetStatusText("Receiving file(s).");
 
                         currentBytesNeeded = JustGimme.Program.pMain.soft_recieve_queue[JustGimme.Program.pMain.recieve_queue_names[currentPlaceInQueue]];
-                        //Debug.WriteLine("Bytes needed are : " + currentBytesNeeded);
+                        
                         List<byte> formatted = new List<byte>(bytesRead);
                         if (currentBytesRecieved.Count < currentBytesNeeded)
                         {
@@ -169,6 +169,9 @@ namespace ServerEngine
                                 currentBytesRecieved.Add(Buffer[i]);
                             }
                         }
+
+                        Debug.WriteLine("Received: {0}/{1} ( {2}% )", currentBytesRecieved.Count, currentBytesNeeded, ((float)currentBytesRecieved.Count / (float)currentBytesNeeded) * 100);
+
                         if (currentBytesRecieved.Count >= currentBytesNeeded)
                         {
                             File.WriteAllBytes(JustGimme.Program.pMain.recieve_queue_names[currentPlaceInQueue], currentBytesRecieved.ToArray());
