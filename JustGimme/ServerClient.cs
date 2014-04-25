@@ -170,11 +170,19 @@ namespace ServerEngine
                             }
                         }
 
-                        Debug.WriteLine("Received: {0}/{1} ( {2} % )", currentBytesRecieved.Count, currentBytesNeeded, ((float)currentBytesRecieved.Count / (float)currentBytesNeeded) * 100);
+                        Debug.WriteLine("Received: {0}/{1} ( {2} % )", currentBytesRecieved.Count, currentBytesNeeded,
+                            ((float) currentBytesRecieved.Count/(float) currentBytesNeeded)*100);
+
+                        JustGimme.Program.pMain.SetStatusText("Received " +
+                                                              ((float) currentBytesRecieved.Count/
+                                                               (float) currentBytesNeeded)*100 + " % of file " +
+                                                              JustGimme.Program.pMain.recieve_queue_names[
+                                                                  currentPlaceInQueue]);
 
                         if (currentBytesRecieved.Count >= currentBytesNeeded)
                         {
-                            File.WriteAllBytes(JustGimme.Program.pMain.recieve_queue_names[currentPlaceInQueue], currentBytesRecieved.ToArray());
+                            File.WriteAllBytes(JustGimme.Program.pMain.recieve_queue_names[currentPlaceInQueue],
+                                currentBytesRecieved.ToArray());
                             Debug.WriteLine("currentBytesRecieved.Count: " + currentBytesRecieved.Count);
                             if (currentBytesRecieved.Count == currentBytesNeeded)
                             {

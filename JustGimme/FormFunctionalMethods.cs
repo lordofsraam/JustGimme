@@ -107,7 +107,11 @@ namespace JustGimme
                     byte[] buff = h.StreamBytes();
                     Array.Resize<byte>(ref buff, sck.SendBufferSize);
                     sck.Send(buff);
-                    Debug.WriteLine("Sent: {0}/{1} ( {2} % )", h.BytesSent, h.Information.Length, ((float)h.BytesSent / (float)h.Information.Length) * 100);
+                    Debug.WriteLine("Sent: {0}/{1} ( {2} % )", h.BytesSent, h.Information.Length,
+                        ((float) h.BytesSent/(float) h.Information.Length)*100);
+                    JustGimme.Program.pMain.SetStatusText("Sent " +
+                                                          ((float) h.BytesSent/(float) h.Information.Length)*100 +
+                                                          " % of file " + h.ShortName);
                 }
             }
         }
